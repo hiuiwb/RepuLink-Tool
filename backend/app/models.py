@@ -2,6 +2,7 @@ import uuid
 
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
+from datetime import datetime
 
 
 # Shared properties
@@ -111,3 +112,92 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=128)
+
+
+# Interaction models
+class InteractionBase(SQLModel):
+    message: str | None = Field(default=None, max_length=1024)
+    status: str = Field(default="pending", max_length=32)
+
+
+class InteractionCreate(InteractionBase):
+    target_id: uuid.UUID
+
+
+class InteractionPublic(InteractionBase):
+    id: uuid.UUID
+    initiator_id: uuid.UUID
+    target_id: uuid.UUID
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class Interaction(InteractionBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    initiator_id: uuid.UUID = Field(foreign_key="user.id", nullable=False)
+    target_id: uuid.UUID = Field(foreign_key="user.id", nullable=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+# Rating models
+class RatingBase(SQLModel):
+    rating: int = Field(ge=1, le=5)
+    comment: str | None = Field(default=None, max_length=1024)
+
+
+class RatingCreate(RatingBase):
+    pass
+
+
+class RatingPublic(RatingBase):
+    id: uuid.UUID
+    interaction_id: uuid.UUID
+    rater_id: uuid.UUID
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class RatingWithRater(RatingPublic):
+    """Rating with rater user information"""
+    rater_email: str
+    rater_full_name: str | None
+
+
+class Rating(RatingBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    interaction_id: uuid.UUID = Field(foreign_key="interaction.id", nullable=False)
+    rater_id: uuid.UUID = Field(foreign_key="user.id", nullable=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+# Endorsement models
+class EndorsementBase(SQLModel):
+    confidence: float = Field(ge=0.0, le=1.0)
+
+
+class EndorsementCreate(EndorsementBase):
+    endorsed_id: uuid.UUID
+
+
+class EndorsementPublic(EndorsementBase):
+    id: uuid.UUID
+    endorser_id: uuid.UUID
+    endorsed_id: uuid.UUID
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class EndorsementWithUser(EndorsementPublic):
+    """Endorsement with user information"""
+    user_email: str
+    user_full_name: str | None
+
+
+class Endorsement(EndorsementBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    endorser_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+    endorsed_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    __table_args__ = (
+        __import__("sqlalchemy").UniqueConstraint("endorser_id", "endorsed_id", name="uq_endorsement_endorser_endorsed"),
+    )

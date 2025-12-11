@@ -7,7 +7,8 @@ set -x
 python app/backend_pre_start.py
 
 # Run migrations
-alembic upgrade head
+# Use 'heads' to apply all heads when multiple head revisions exist
+alembic upgrade heads
 
 # Create initial data in DB
 python app/initial_data.py

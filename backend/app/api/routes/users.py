@@ -1,7 +1,7 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import col, delete, func, select
 
 from app import crud
@@ -46,6 +46,23 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     users = session.exec(statement).all()
 
     return UsersPublic(data=users, count=count)
+
+
+
+@router.get("/search", response_model=UsersPublic)
+def search_users_endpoint(
+    session: SessionDep,
+    current_user: CurrentUser,
+    query: str = Query(..., description="Search query for user email or full name"),
+    limit: int = Query(20, description="Maximum results to return"),
+) -> Any:
+    """Search users by email or full name. Authenticated users only."""
+    if not query or not query.strip():
+        return UsersPublic(data=[], count=0)
+    results = crud.search_users(session=session, query=query, limit=limit)
+    # Exclude the current user from search results
+    results = [r for r in results if r.id != current_user.id]
+    return UsersPublic(data=results, count=len(results))
 
 
 @router.post(

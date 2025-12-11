@@ -3,7 +3,218 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { EndorsementsCreateOrUpdateEndorsementData, EndorsementsCreateOrUpdateEndorsementResponse, EndorsementsGetMyEndorsementsResponse, EndorsementsGetMyEndorsersResponse, EndorsementsGetUserEndorsementsData, EndorsementsGetUserEndorsementsResponse, EndorsementsGetUserEndorsersData, EndorsementsGetUserEndorsersResponse, InteractionsCreateInteractionData, InteractionsCreateInteractionResponse, InteractionsRespondInteractionData, InteractionsRespondInteractionResponse, InteractionsListUserInteractionsData, InteractionsListUserInteractionsResponse, InteractionsListRatingsForInteractionData, InteractionsListRatingsForInteractionResponse, InteractionsCreateRatingForInteractionData, InteractionsCreateRatingForInteractionResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersSearchUsersEndpointData, UsersSearchUsersEndpointResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+
+export class EndorsementsService {
+    /**
+     * Create Or Update Endorsement
+     * Create or update an endorsement.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns EndorsementPublic Successful Response
+     * @throws ApiError
+     */
+    public static createOrUpdateEndorsement(data: EndorsementsCreateOrUpdateEndorsementData): CancelablePromise<EndorsementsCreateOrUpdateEndorsementResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/endorsements/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get My Endorsements
+     * Get all endorsements made by the current user.
+     * @returns EndorsementWithUser Successful Response
+     * @throws ApiError
+     */
+    public static getMyEndorsements(): CancelablePromise<EndorsementsGetMyEndorsementsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/endorsements/endorsed-by-me'
+        });
+    }
+    
+    /**
+     * Get My Endorsers
+     * Get all users endorsing the current user.
+     * @returns EndorsementWithUser Successful Response
+     * @throws ApiError
+     */
+    public static getMyEndorsers(): CancelablePromise<EndorsementsGetMyEndorsersResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/endorsements/endorsing-me'
+        });
+    }
+    
+    /**
+     * Get User Endorsements
+     * Get all endorsements made by a specific user.
+     * @param data The data for the request.
+     * @param data.userId
+     * @returns EndorsementWithUser Successful Response
+     * @throws ApiError
+     */
+    public static getUserEndorsements(data: EndorsementsGetUserEndorsementsData): CancelablePromise<EndorsementsGetUserEndorsementsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/endorsements/{user_id}/endorsed-by',
+            path: {
+                user_id: data.userId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get User Endorsers
+     * Get all endorsers of a specific user.
+     * @param data The data for the request.
+     * @param data.userId
+     * @returns EndorsementWithUser Successful Response
+     * @throws ApiError
+     */
+    public static getUserEndorsers(data: EndorsementsGetUserEndorsersData): CancelablePromise<EndorsementsGetUserEndorsersResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/endorsements/{user_id}/endorsers',
+            path: {
+                user_id: data.userId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class InteractionsService {
+    /**
+     * Create Interaction
+     * Create a new interaction request from current user to a target user.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns InteractionPublic Successful Response
+     * @throws ApiError
+     */
+    public static createInteraction(data: InteractionsCreateInteractionData): CancelablePromise<InteractionsCreateInteractionResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/interactions/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Respond Interaction
+     * Accept or deny an interaction. Only the target user can respond.
+     * @param data The data for the request.
+     * @param data.interactionId
+     * @param data.accept
+     * @returns Message Successful Response
+     * @throws ApiError
+     */
+    public static respondInteraction(data: InteractionsRespondInteractionData): CancelablePromise<InteractionsRespondInteractionResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/interactions/{interaction_id}/respond',
+            path: {
+                interaction_id: data.interactionId
+            },
+            query: {
+                accept: data.accept
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List User Interactions
+     * List interactions for a user. Only the user themselves or superuser can list.
+     * @param data The data for the request.
+     * @param data.userId
+     * @param data.role
+     * @param data.skip
+     * @param data.limit
+     * @returns InteractionPublic Successful Response
+     * @throws ApiError
+     */
+    public static listUserInteractions(data: InteractionsListUserInteractionsData): CancelablePromise<InteractionsListUserInteractionsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/interactions/users/{user_id}',
+            path: {
+                user_id: data.userId
+            },
+            query: {
+                role: data.role,
+                skip: data.skip,
+                limit: data.limit
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * List Ratings For Interaction
+     * List ratings for an interaction with rater information. Only participants or superuser can view.
+     * @param data The data for the request.
+     * @param data.interactionId
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static listRatingsForInteraction(data: InteractionsListRatingsForInteractionData): CancelablePromise<InteractionsListRatingsForInteractionResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/interactions/{interaction_id}/ratings',
+            path: {
+                interaction_id: data.interactionId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Create Rating For Interaction
+     * Create a rating for an accepted interaction. Only participants can rate.
+     * @param data The data for the request.
+     * @param data.interactionId
+     * @param data.requestBody
+     * @returns RatingPublic Successful Response
+     * @throws ApiError
+     */
+    public static createRatingForInteraction(data: InteractionsCreateRatingForInteractionData): CancelablePromise<InteractionsCreateRatingForInteractionResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/interactions/{interaction_id}/rating',
+            path: {
+                interaction_id: data.interactionId
+            },
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
 
 export class ItemsService {
     /**
@@ -273,6 +484,29 @@ export class UsersService {
             url: '/api/v1/users/',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Search Users Endpoint
+     * Search users by email or full name. Authenticated users only.
+     * @param data The data for the request.
+     * @param data.query Search query for user email or full name
+     * @param data.limit Maximum results to return
+     * @returns UsersPublic Successful Response
+     * @throws ApiError
+     */
+    public static searchUsersEndpoint(data: UsersSearchUsersEndpointData): CancelablePromise<UsersSearchUsersEndpointResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/users/search',
+            query: {
+                query: data.query,
+                limit: data.limit
+            },
             errors: {
                 422: 'Validation Error'
             }

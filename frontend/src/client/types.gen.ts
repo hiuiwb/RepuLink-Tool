@@ -9,8 +9,51 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+export type EndorsementCreate = {
+    confidence: number;
+    endorsed_id: string;
+};
+
+export type EndorsementPublic = {
+    confidence: number;
+    id: string;
+    endorser_id: string;
+    endorsed_id: string;
+    created_at?: string;
+    updated_at?: string;
+};
+
+/**
+ * Endorsement with user information
+ */
+export type EndorsementWithUser = {
+    confidence: number;
+    id: string;
+    endorser_id: string;
+    endorsed_id: string;
+    created_at?: string;
+    updated_at?: string;
+    user_email: string;
+    user_full_name: (string | null);
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
+};
+
+export type InteractionCreate = {
+    message?: (string | null);
+    status?: string;
+    target_id: string;
+};
+
+export type InteractionPublic = {
+    message?: (string | null);
+    status?: string;
+    id: string;
+    initiator_id: string;
+    target_id: string;
+    created_at?: string;
 };
 
 export type ItemCreate = {
@@ -49,6 +92,20 @@ export type PrivateUserCreate = {
     password: string;
     full_name: string;
     is_verified?: boolean;
+};
+
+export type RatingCreate = {
+    rating: number;
+    comment?: (string | null);
+};
+
+export type RatingPublic = {
+    rating: number;
+    comment?: (string | null);
+    id: string;
+    interaction_id: string;
+    rater_id: string;
+    created_at?: string;
 };
 
 export type Token = {
@@ -106,6 +163,63 @@ export type ValidationError = {
     msg: string;
     type: string;
 };
+
+export type EndorsementsCreateOrUpdateEndorsementData = {
+    requestBody: EndorsementCreate;
+};
+
+export type EndorsementsCreateOrUpdateEndorsementResponse = (EndorsementPublic);
+
+export type EndorsementsGetMyEndorsementsResponse = (Array<EndorsementWithUser>);
+
+export type EndorsementsGetMyEndorsersResponse = (Array<EndorsementWithUser>);
+
+export type EndorsementsGetUserEndorsementsData = {
+    userId: string;
+};
+
+export type EndorsementsGetUserEndorsementsResponse = (Array<EndorsementWithUser>);
+
+export type EndorsementsGetUserEndorsersData = {
+    userId: string;
+};
+
+export type EndorsementsGetUserEndorsersResponse = (Array<EndorsementWithUser>);
+
+export type InteractionsCreateInteractionData = {
+    requestBody: InteractionCreate;
+};
+
+export type InteractionsCreateInteractionResponse = (InteractionPublic);
+
+export type InteractionsRespondInteractionData = {
+    accept: boolean;
+    interactionId: string;
+};
+
+export type InteractionsRespondInteractionResponse = (Message);
+
+export type InteractionsListUserInteractionsData = {
+    limit?: number;
+    role?: (string | null);
+    skip?: number;
+    userId: string;
+};
+
+export type InteractionsListUserInteractionsResponse = (Array<InteractionPublic>);
+
+export type InteractionsListRatingsForInteractionData = {
+    interactionId: string;
+};
+
+export type InteractionsListRatingsForInteractionResponse = (unknown);
+
+export type InteractionsCreateRatingForInteractionData = {
+    interactionId: string;
+    requestBody: RatingCreate;
+};
+
+export type InteractionsCreateRatingForInteractionResponse = (RatingPublic);
 
 export type ItemsReadItemsData = {
     limit?: number;
@@ -183,6 +297,19 @@ export type UsersCreateUserData = {
 };
 
 export type UsersCreateUserResponse = (UserPublic);
+
+export type UsersSearchUsersEndpointData = {
+    /**
+     * Maximum results to return
+     */
+    limit?: number;
+    /**
+     * Search query for user email or full name
+     */
+    query: string;
+};
+
+export type UsersSearchUsersEndpointResponse = (UsersPublic);
 
 export type UsersReadUserMeResponse = (UserPublic);
 

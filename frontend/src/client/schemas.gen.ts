@@ -55,6 +55,119 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const EndorsementCreateSchema = {
+    properties: {
+        confidence: {
+            type: 'number',
+            maximum: 1,
+            minimum: 0,
+            title: 'Confidence'
+        },
+        endorsed_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Endorsed Id'
+        }
+    },
+    type: 'object',
+    required: ['confidence', 'endorsed_id'],
+    title: 'EndorsementCreate'
+} as const;
+
+export const EndorsementPublicSchema = {
+    properties: {
+        confidence: {
+            type: 'number',
+            maximum: 1,
+            minimum: 0,
+            title: 'Confidence'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        endorser_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Endorser Id'
+        },
+        endorsed_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Endorsed Id'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
+        }
+    },
+    type: 'object',
+    required: ['confidence', 'id', 'endorser_id', 'endorsed_id'],
+    title: 'EndorsementPublic'
+} as const;
+
+export const EndorsementWithUserSchema = {
+    properties: {
+        confidence: {
+            type: 'number',
+            maximum: 1,
+            minimum: 0,
+            title: 'Confidence'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        endorser_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Endorser Id'
+        },
+        endorsed_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Endorsed Id'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        },
+        updated_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Updated At'
+        },
+        user_email: {
+            type: 'string',
+            title: 'User Email'
+        },
+        user_full_name: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'User Full Name'
+        }
+    },
+    type: 'object',
+    required: ['confidence', 'id', 'endorser_id', 'endorsed_id', 'user_email', 'user_full_name'],
+    title: 'EndorsementWithUser',
+    description: 'Endorsement with user information'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -67,6 +180,83 @@ export const HTTPValidationErrorSchema = {
     },
     type: 'object',
     title: 'HTTPValidationError'
+} as const;
+
+export const InteractionCreateSchema = {
+    properties: {
+        message: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 1024
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Message'
+        },
+        status: {
+            type: 'string',
+            maxLength: 32,
+            title: 'Status',
+            default: 'pending'
+        },
+        target_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Target Id'
+        }
+    },
+    type: 'object',
+    required: ['target_id'],
+    title: 'InteractionCreate'
+} as const;
+
+export const InteractionPublicSchema = {
+    properties: {
+        message: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 1024
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Message'
+        },
+        status: {
+            type: 'string',
+            maxLength: 32,
+            title: 'Status',
+            default: 'pending'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        initiator_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Initiator Id'
+        },
+        target_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Target Id'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['id', 'initiator_id', 'target_id'],
+    title: 'InteractionPublic'
 } as const;
 
 export const ItemCreateSchema = {
@@ -235,6 +425,78 @@ export const PrivateUserCreateSchema = {
     type: 'object',
     required: ['email', 'password', 'full_name'],
     title: 'PrivateUserCreate'
+} as const;
+
+export const RatingCreateSchema = {
+    properties: {
+        rating: {
+            type: 'integer',
+            maximum: 5,
+            minimum: 1,
+            title: 'Rating'
+        },
+        comment: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 1024
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Comment'
+        }
+    },
+    type: 'object',
+    required: ['rating'],
+    title: 'RatingCreate'
+} as const;
+
+export const RatingPublicSchema = {
+    properties: {
+        rating: {
+            type: 'integer',
+            maximum: 5,
+            minimum: 1,
+            title: 'Rating'
+        },
+        comment: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 1024
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Comment'
+        },
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        interaction_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Interaction Id'
+        },
+        rater_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Rater Id'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At'
+        }
+    },
+    type: 'object',
+    required: ['rating', 'id', 'interaction_id', 'rater_id'],
+    title: 'RatingPublic'
 } as const;
 
 export const TokenSchema = {
