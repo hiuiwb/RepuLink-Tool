@@ -378,13 +378,38 @@ function InteractionRatingsDisplay({ interactionId }: { interactionId: string })
           <div key={rating.id} className="bg-muted/50 p-3 rounded-md space-y-1">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-3 h-3 ${i < rating.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}`}
-                  />
-                ))}
-                <span className="text-sm font-medium">{rating.rating}/5</span>
+                {rating.rating < 0 ? (
+                  <>
+                    {[...Array(Math.abs(rating.rating))].map((_, i) => (
+                      <Star
+                        key={`negative-${i}`}
+                        className="w-3 h-3 fill-red-500 text-red-500"
+                      />
+                    ))}
+                    {[...Array(5 - Math.abs(rating.rating))].map((_, i) => (
+                      <Star
+                        key={`empty-${i}`}
+                        className="w-3 h-3 text-muted-foreground"
+                      />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {[...Array(rating.rating)].map((_, i) => (
+                      <Star
+                        key={`positive-${i}`}
+                        className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                      />
+                    ))}
+                    {[...Array(5 - rating.rating)].map((_, i) => (
+                      <Star
+                        key={`empty-${i}`}
+                        className="w-3 h-3 text-muted-foreground"
+                      />
+                    ))}
+                  </>
+                )}
+                <span className="text-sm font-medium">{rating.rating > 0 ? `+${rating.rating}` : rating.rating}/5</span>
               </div>
             </div>
             <div className="text-xs text-muted-foreground">
@@ -402,7 +427,7 @@ function InteractionRatingsDisplay({ interactionId }: { interactionId: string })
 
 function RatingForm({ interaction, userHasRated }: { interaction: any; userHasRated: boolean }): React.JSX.Element | null {
   const { showSuccessToast, showErrorToast } = useCustomToast()
-  const [ratingState, setRatingState] = useState<{ rating: number; comment: string }>({ rating: 5, comment: "" })
+  const [ratingState, setRatingState] = useState<{ rating: number; comment: string }>({ rating: 0, comment: "" })
   const addRatingMutation = useAddRating()
 
   if (userHasRated) {
@@ -419,7 +444,7 @@ function RatingForm({ interaction, userHasRated }: { interaction: any; userHasRa
       {
         onSuccess: () => {
           showSuccessToast("Rating submitted successfully!")
-          setRatingState({ rating: 5, comment: "" })
+          setRatingState({ rating: 0, comment: "" })
         },
         onError: (error: any) => {
           const errorMsg = error?.message || error?.detail || String(error) || "Failed to submit rating"
@@ -438,15 +463,15 @@ function RatingForm({ interaction, userHasRated }: { interaction: any; userHasRa
         </h4>
         <div className="space-y-2">
           <div>
-            <label className="text-sm">Rating (1-5 stars)</label>
+            <label className="text-sm">Rating (-5 to 5)</label>
             <select
               value={ratingState.rating}
               onChange={(e) => setRatingState({ ...ratingState, rating: parseInt(e.target.value) })}
               className="w-full mt-1 px-3 py-2 border rounded-md text-sm"
             >
-              {[1, 2, 3, 4, 5].map((n) => (
+              {[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5].map((n) => (
                 <option key={n} value={n}>
-                  {n} Star{n !== 1 ? "s" : ""}
+                  {n > 0 ? `+${n}` : n}
                 </option>
               ))}
             </select>

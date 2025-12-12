@@ -141,7 +141,7 @@ class Interaction(InteractionBase, table=True):
 
 # Rating models
 class RatingBase(SQLModel):
-    rating: int = Field(ge=1, le=5)
+    rating: int = Field(ge=-5, le=5)
     comment: str | None = Field(default=None, max_length=1024)
 
 
